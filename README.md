@@ -2,7 +2,7 @@
 
 ## Overview
 
-**nadm** (Not Only a Dotfiles Manager) is a simple project of mine, because I just wanted to create a dotfiles manager so it's not phenomenal and I don't really work on it anymore. It's all just 1 bash script so you can use it as a template if you want.
+**nadm** (Not Only a Dotfiles Manager) is a simple project of mine, because I just wanted to create a dotfiles manager so it's not phenomenal and I don't really work on it anymore. It's all just one bash script so you can use it as a template if you want.
 
 ## Installation
 
