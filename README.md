@@ -1,4 +1,4 @@
-# nadm - Not Only a Dotfiles Manager
+# nadm - Not only A Dotfiles Manager
 
 ## Overview
 
