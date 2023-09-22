@@ -1,0 +1,139 @@
+#!/bin/bash
+
+# Define the nadm directory path
+NADM_DIR="$HOME/.local/share/nadm"
+
+# Define the paths directory
+PATHS_DIR="$HOME/.local/share/nadm/dotfiles"
+
+# Define the paths file
+PATHS_FILE="$HOME/.local/share/nadm/paths.txt"
+
+# Check if there are no command-line arguments
+if [ $# -eq 0 ]; then
+    echo "Hi, read the tutorial for what to do."
+    exit 0
+fi
+
+# Check the first command-line argument
+case "$1" in
+    "init")
+        # Check if the nadm directory exists
+        if [ -d "$NADM_DIR" ]; then
+            echo "Already initialized. The nadm environment is ready."
+        else
+            # Create the nadm directory
+            mkdir -p "$NADM_DIR"
+
+            if [ $? -eq 0 ]; then
+                # Create the paths directory
+                mkdir -p "$PATHS_DIR"
+                # Create the paths file
+                touch "$PATHS_FILE"
+                
+                echo "Successfully initialized. The nadm environment is ready."
+            else
+                echo "Initialization failed. Please check permissions or try again."
+                exit 1
+            fi
+        fi
+        ;;
+    "add")
+        # Check if the nadm directory exists
+        if [ ! -d "$NADM_DIR" ]; then
+            echo "Error: NADM is not initialized. Please run './nadm.sh init' first."
+            exit 1
+        fi
+        
+        # Check if a file or directory path was provided as the second argument
+        if [ -z "$2" ]; then
+            echo "Please provide a file or directory path to add."
+            exit 1
+        fi
+
+        # Check if the file or directory already exists in NADM_DIR/dotfiles
+        if [ -e "$PATHS_DIR/$(basename "$2")" ]; then
+            echo "Error: File or directory is already added to the environment."
+            exit 1
+        fi
+
+        # Copy the file/directory to NADM_DIR/dotfiles
+        cp -r "$2" "$PATHS_DIR/"
+
+        # Add the path to the paths file
+        echo "$2" >> "$PATHS_FILE"
+        
+        echo "Added $2 to the environment."
+        ;;
+    "remove")
+        # Check if the nadm directory exists
+        if [ ! -d "$NADM_DIR" ]; then
+            echo "Error: NADM is not initialized. Please run './nadm.sh init' first."
+            exit 1
+        fi
+
+        # Check if a file or directory path was provided as the second argument
+        if [ -z "$2" ]; then
+            echo "Please provide a file or directory path to remove."
+            exit 1
+        fi
+
+        # Check if the file or directory exists in NADM_DIR/dotfiles
+        if [ ! -e "$PATHS_DIR/$(basename "$2")" ]; then
+            echo "Error: File or directory is not in the environment."
+            exit 1
+        fi
+
+        # Remove the file/directory from NADM_DIR/dotfiles
+        rm -r "$PATHS_DIR/$(basename "$2")"
+
+        # Remove the path from the paths file
+        grep -v "^$2$" "$PATHS_FILE" > "$PATHS_FILE.tmp" && mv "$PATHS_FILE.tmp" "$PATHS_FILE"
+
+        echo "Removed $2 from the environment."
+        ;;
+    "update")
+        # Check if the nadm directory exists
+        if [ ! -d "$NADM_DIR" ]; then
+            echo "Error: NADM is not initialized. Please run './nadm.sh init' first."
+            exit 1
+        fi
+
+        # Check if there are dotfiles to update
+        if [ ! -s "$PATHS_FILE" ]; then
+            echo "No dotfiles to update."
+            exit 0
+        fi
+
+        # Read each line in the paths file and add the dotfile back to NADM_DIR/dotfiles
+        while IFS= read -r dotfile; do
+            if [ -e "$dotfile" ]; then
+                # Check if the dotfile already exists in NADM_DIR/dotfiles
+                if [ -e "$PATHS_DIR/$(basename "$dotfile")" ]; then
+                    # Copy the dotfile to NADM_DIR/dotfiles
+                    cp -r "$dotfile" "$PATHS_DIR/"
+                    echo "Updated $dotfile in the environment."
+                fi
+            fi
+        done < "$PATHS_FILE"
+        ;;
+    "uninstall")
+        # Remove the nadm directory and its contents
+        if [ -d "$NADM_DIR" ]; then
+            rm -rf "$NADM_DIR"
+            echo "Uninstalled nadm."
+        else
+            echo "NADM is not installed."
+        fi
+        ;;
+    *)
+        echo "Unknown command: $1"
+        echo "Usage: $0 [init | add <file_or_directory_path> | remove <file_or_directory_path> | update | cd | uninstall]"
+        exit 1
+        ;;
+    *)
+        echo "Unknown command: $1"
+        echo "Usage: $0 [init | add <file_or_directory_path> | remove <file_or_directory_path>]"
+        exit 1
+        ;;
+esac
