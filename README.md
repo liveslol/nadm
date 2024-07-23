@@ -20,7 +20,7 @@ alias nadmenv='cd "$nadmenv"'
 What it does, is that if you want to go into your enviroment (which will be explained below) you can just do ```nadmenv``` instead of ```cd ~/.local/share/nadm```
 ## Usage
 As you can see from the name, you don't have to use only for dotfiles. It's meant to be used like this:
-So you have multiple files / folders on your system that you all want to add to one repository. You create a git repo but you don't want to manually re-copy the files there everytime you make changes in one of them. That's when nadm comes in. You add all of them into the enviroment and then with just one command it synchronizes all of the files to be exactly as you have them on your system.
+You have multiple files / folders on your system that you all want to add to one repository. You create a git repo but you don't want to manually re-copy the files there everytime you make changes in one of them. That's when nadm comes in. You add all of them into the enviroment and then with just one command it synchronizes all of the files to be exactly as you have them on your system.
 
 The commands are:
 - ```nadm init```creates the enviroment at ~/.local/share/nadm
