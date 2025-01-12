@@ -1,8 +1,5 @@
 #!/bin/bash
 
-# TEST
-
-
 NADM_DIR="$HOME/.local/share/nadm"
 
 PATHS_DIR="$HOME/.local/share/nadm/dotfiles"
